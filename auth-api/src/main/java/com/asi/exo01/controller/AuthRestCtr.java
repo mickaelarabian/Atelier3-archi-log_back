@@ -35,7 +35,7 @@ public class AuthRestCtr {
 	}
 	
 	@PostMapping("/auth/login")
-	public User login(@RequestBody User u) {
+	public Integer login(@RequestBody User u) {
 		if (u.getSurname() != null && u.getPwd() != null) {
 			return authService.login(u);
 		}

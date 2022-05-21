@@ -1,6 +1,8 @@
 package com.asi.exo01.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.asi.exo01.exception.UserNotFoundException;
@@ -20,9 +22,8 @@ public class UserService {
 		return uRepository.findAll();
 	}
 	
-	public User getUser(Integer id) {
-			return uRepository.findById(id)
-					.orElseThrow(() -> new UserNotFoundException(id));
+	public Optional<User> getUser(Integer id) {
+		return uRepository.findById(id);
 	}
 	
 	public User getUserBySurname(String surname) {
@@ -31,6 +32,16 @@ public class UserService {
 	
 	public User createUser(User u) {
 		return uRepository.save(u);
+	}
+	
+	public User updateUser(Integer userId, Integer amount, Boolean isAdd) {
+		Optional<User> user = uRepository.findById(userId);
+		if(isAdd) {
+			user.get().setSolde(user.get().getSolde() + amount);
+		} else {
+			user.get().setSolde(user.get().getSolde() - amount);
+		}
+		return uRepository.save(user);
 	}
 	
 }

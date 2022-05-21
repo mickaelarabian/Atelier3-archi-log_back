@@ -1,12 +1,12 @@
 package com.asi.exo01.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.asi.exo01.model.Card;
-import com.asi.exo01.model.User;
 import com.asi.exo01.repository.CardRepository;
-import com.asi.exo01.repository.UserRepository;
 
 @Service
 public class CardService {
@@ -81,8 +81,23 @@ public class CardService {
 		return cRepository.findByUserId(id);
 	}
 	
+	public Optional<Card> getCard(Integer id) {
+		return cRepository.findById(id);
+	}
+	
 	public List<Card> getCards() {
 		return cRepository.findAll();
+	}
+	
+	public Card updateCard(Integer userId, Integer id, Boolean isSell) {
+		Optional<Card> card = cRepository.findById(id);
+		if(isSell) {			
+			card.get().setUserId(null);
+		} else {
+			card.get().setUserId(userId);
+		}
+		return cRepository.save(card);			
+		
 	}
 	
 }

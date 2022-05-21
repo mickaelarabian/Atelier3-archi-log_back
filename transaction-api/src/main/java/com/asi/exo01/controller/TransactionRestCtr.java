@@ -9,8 +9,6 @@ import com.asi.exo01.exception.BuyException;
 import com.asi.exo01.exception.CardCantBeSellException;
 import com.asi.exo01.exception.CardNoAvalaibleException;
 import com.asi.exo01.exception.MissParamException;
-import com.asi.exo01.model.Card;
-import com.asi.exo01.model.User;
 import com.asi.exo01.request.buyRequest;
 import com.asi.exo01.service.TransactionService;
 
@@ -25,32 +23,18 @@ private final TransactionService tService;
 	}
 	
 	@RequestMapping(value="/buy", method={RequestMethod.OPTIONS,RequestMethod.POST})
-	public Card buy(@RequestBody buyRequest request) {
+	public String buy(@RequestBody buyRequest request) {
 		if (request.getCardId() == null || request.getUserId() == null) {
 			throw new MissParamException();
 		}
-		User userObject = tService.getUser(request.getUserId());
-		Card cardObject = tService.getCard(request.getCardId());
-		if (cardObject.getUserId() != null) {
-			throw new CardNoAvalaibleException();
-		}
-		if (cardObject.getPrice() <= userObject.getSolde()) {
-			return tService.buyCard(userObject, cardObject);
-		}
-		throw new BuyException();
-		
+		return tService.buyCard(request.getCardId(), request.getUserId(), request);
 	}
 	
 	@RequestMapping(value="/sell", method={RequestMethod.OPTIONS,RequestMethod.POST})
-	public Card sell(@RequestBody buyRequest request) {
+	public String sell(@RequestBody buyRequest request) {
 		if (request.getCardId() == null || request.getUserId() == null) {
 			throw new MissParamException();
 		}
-		Card cardObject = tService.getCard(request.getCardId());
-		User userObject = tService.getUser(request.getUserId());
-		if (cardObject.getUserId() != userObject.getId()) {
-			throw new CardCantBeSellException();
-		}
-		return tService.sellCard(userObject, cardObject);
+		return tService.sellCard(request.getCardId(), request.getUserId(), request);
 	}
 }

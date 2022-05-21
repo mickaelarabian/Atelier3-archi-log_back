@@ -45,12 +45,8 @@ public class AuthService {
 		// Code = 200.
 		if (result.getStatusCode() == HttpStatus.OK) {
 			User e = result.getBody();
-//			System.out.println("(Client Side) Employee Created: "+ e.getId());
 			return e;
-//			return "16";
 		}
-//		return "-1";
-//		 HttpPost post = new HttpPost("http://localhost:8080/users");
 		return null;
 		 
 		 
@@ -82,30 +78,26 @@ public class AuthService {
 	}
 	
 	//TODO ON FAIT UN GET DE USER BY USERNAME PUIS ON COMPARE ICI
-	public User login(User u) {
-		String URL_CREATE_USER = "http://localhost:8080/users/login";
+	public Integer login(User u) {
+		String URL_CREATE_USER = "http://localhost:8080/users/{surname}";
 
 
 		RestTemplate restTemplate = new RestTemplate();
 
-		// Data attached to the request.
-		HttpEntity<User> requestBody = new HttpEntity<>(u);
-
 		// Send request with POST method.
 		ResponseEntity<User> result 
-		     = restTemplate.getForEntity(URL_CREATE_USER, requestBody, User.class);
+		     = restTemplate.getForEntity(URL_CREATE_USER, User.class, u.getSurname() );
 
 		System.out.println("Status code:" + result.getStatusCode());
 
 		// Code = 200.
 		if (result.getStatusCode() == HttpStatus.OK) {
 			User e = result.getBody();
-//			System.out.println("(Client Side) Employee Created: "+ e.getId());
-			return e;
-//			return "16";
+			if(e.getPwd().equals(u.getPwd())) {
+				return e.getId();	
+			}
+			return -1;
 		}
-//		return "-1";
-//		 HttpPost post = new HttpPost("http://localhost:8080/users");
 		return null;
 		
 	}

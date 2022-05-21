@@ -1,52 +1,44 @@
 package com.asi.exo01.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
+
 import com.asi.exo01.exception.CardNotFoundException;
 import com.asi.exo01.exception.UserNotFoundException;
-import com.asi.exo01.model.Card;
-import com.asi.exo01.model.User;
-import com.asi.exo01.repository.CardRepository;
-import com.asi.exo01.repository.UserRepository;
+import com.asi.exo01.request.buyRequest;
 
 @Service
 public class TransactionService {
 	
-	@Autowired
-	private final CardRepository cRepository;
-	
-	@Autowired
-	private final UserRepository uRepository;
-	
-	public TransactionService(CardRepository cRepository, UserRepository uRepository) {
+	public TransactionService() {
 		super();
-		this.cRepository = cRepository;
-		this.uRepository = uRepository;
+
 	}
 	
-	public Card getCard(Integer intCard) {
-		return cRepository.findById(intCard)
-				.orElseThrow(() -> new CardNotFoundException());
+	public String buyCard(Integer cardId, Integer userId, buyRequest request) {
+		String URL_UPDATE_USER = "http://localhost:8080/users/{userId}";
+		String URL_UPDATE_CARD = "http://localhost:8080/cards/{cardId}";
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.put(URL_UPDATE_USER, request, String.class);
+		restTemplate.put(URL_UPDATE_CARD, request, String.class);
+
+		return null;
 	}
 	
-	public User getUser(Integer intUser) {
-		return uRepository.findById(intUser)
-				.orElseThrow(() -> new UserNotFoundException(intUser));
-	}
-	
-	public Card buyCard(User user, Card card) {
-		user.setSolde(user.getSolde() - card.getPrice());
-		card.setUserId(user.getId());
-		cRepository.save(card);
-		uRepository.save(user);
-		return card;
-	}
-	
-	public Card sellCard(User user, Card card) {
-		user.setSolde(user.getSolde() + card.getPrice());
-		card.setUserId(null);
-		cRepository.save(card);
-		uRepository.save(user);
-		return card;
+	public String sellCard(Integer cardId, Integer userId, buyRequest request) {
+		String URL_UPDATE_USER = "http://localhost:8080/users/{userId}";
+		String URL_UPDATE_CARD = "http://localhost:8080/cards/{cardId}";
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.put(URL_UPDATE_USER, request, String.class);
+		restTemplate.put(URL_UPDATE_CARD, request, String.class);
+
+		return null;
 	}
 }
