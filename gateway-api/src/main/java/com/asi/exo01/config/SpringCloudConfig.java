@@ -4,12 +4,14 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 public class SpringCloudConfig {
 
 		// TODO Auto-generated constructor stub
 		@Bean
+		@CrossOrigin(origins = "http://localhost:3000")
 		public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 			return builder.routes()
 				.route("authModule", r -> r.path("/auth/**")
